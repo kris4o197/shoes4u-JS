@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-md-6">
+    <% if (product.imageUrl) { %>
+      <img src="<%= product.imageUrl %>" class="img-fluid rounded shadow-sm mb-3">
+    <% } else { %>
+      <div class="bg-secondary text-white p-5 text-center rounded mb-3">
+        No image
+      </div>
+    <% } %>
+  </div>
+
+  <div class="col-md-6">
+    <h1><%= product.name %></h1>
+    <p class="text-muted">
+      Category: <%= product.category ? product.category.name : "Uncategorized" %>
+    </p>
+    <h3 class="text-success mb-3">$<%= product.price %></h3>
+
+    <p><%= product.description || "No description." %></p>
+
+    <form method="POST" action="/cart/add/<%= product.id %>" class="mt-4">
+      <button class="btn btn-lg btn-primary">Add to Cart</button>
+    </form>
+  </div>
+</div>

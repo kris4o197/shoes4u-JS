@@ -1,0 +1,44 @@
+<h2>Order #<%= order.id %></h2>
+
+<p>
+  Status:
+  <% if (order.status === "PENDING") { %>
+    <span class="badge bg-warning text-dark">Pending</span>
+  <% } else if (order.status === "SHIPPED") { %>
+    <span class="badge bg-info text-dark">Shipped</span>
+  <% } else if (order.status === "DELIVERED") { %>
+    <span class="badge bg-success">Delivered</span>
+  <% } else if (order.status === "CANCELLED") { %>
+    <span class="badge bg-danger">Cancelled</span>
+  <% } %>
+</p>
+
+<hr>
+
+<h4>Items</h4>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Qty</th>
+      <th>Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% order.items.forEach(item => { %>
+      <tr>
+        <td>
+          <% if (item.product) { %>
+            <%= item.product.name %>
+          <% } else { %>
+            <%= item.productName %> <span class="text-muted">(deleted)</span>
+          <% } %>
+        </td>
+        <td><%= item.quantity %></td>
+        <td>$<%= item.productPrice.toFixed(2) %></td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<p><strong>Total:</strong> $<%= order.totalPrice.toFixed(2) %></p>

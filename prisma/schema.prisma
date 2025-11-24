@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int      @id @default(autoincrement())
+  name     String
+  email    String   @unique
+  password String
+  role     Role     @default(USER)
+  cart     CartItem[]
+  orders   Order[]
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  imageUrl    String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+  categoryId  Int?
+  orderItems  OrderItem[]
+  cartItems   CartItem[]
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  products Product[]
+}
+
+model CartItem {
+  id        Int     @id @default(autoincrement())
+  quantity  Int     @default(1)
+  user      User    @relation(fields: [userId], references: [id])
+  userId    Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  createdAt  DateTime    @default(now())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     Int
+  items      OrderItem[]
+  totalPrice Float
+  status     OrderStatus @default(PENDING)
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   Int
+  productId Int?        // ✔ може да е null
+  product   Product?    @relation(fields: [productId], references: [id], onDelete: SetNull)
+  quantity  Int     @default(1)
+  price     Float
+  productName  String
+  productPrice Float
+  
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+

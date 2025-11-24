@@ -1,0 +1,32 @@
+<h1 class="mb-4">Checkout</h1>
+
+<% if (cartItems.length === 0) { %>
+  <div class="alert alert-info">No items in cart.</div>
+<% } else { %>
+  <table class="table table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>Product</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% cartItems.forEach(i => { %>
+        <tr>
+          <td><%= i.product.name %></td>
+          <td><%= i.quantity %></td>
+          <td>$<%= i.product.price %></td>
+          <td>$<%= (i.product.price * i.quantity).toFixed(2) %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+  <h3>Grand total: $<%= total.toFixed(2) %></h3>
+
+  <form method="POST" action="/checkout" class="mt-3">
+    <button class="btn btn-primary">Place order</button>
+  </form>
+<% } %>
